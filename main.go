@@ -1,7 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"os"
+
+	"github.com/davecgh/go-spew/spew"
+	"github.com/goccy/go-yaml"
+)
+
+var configFilePath string = "./config.yml"
 
 func main() {
-	fmt.Println("hello there")
+	// load config from config file
+	data, err := os.ReadFile(configFilePath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	var config Config
+	if err := yaml.Unmarshal(data, &config); err != nil {
+		log.Fatalln(err)
+	}
+
+	spew.Dump(config)
 }
