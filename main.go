@@ -93,6 +93,8 @@ func main() {
 func downloadPlaylist(playlist Playlist) error {
 	cmd := exec.Command(
 		"yt-dlp",
+		"--ignore-errors", // yt-dlp returns non 0 exit code on error.
+		// one video was private so it exited :c
 
 		"-S", "vcodec:av01,acodec:opus",
 		"-f", "bestvideo[height<=480]+bestaudio/best[height<=480]",
