@@ -2,3 +2,4 @@ tmp/
 downloads/
 archive.txt
 .env
+./yt-playlist-sync
