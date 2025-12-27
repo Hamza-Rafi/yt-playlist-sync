@@ -34,11 +34,20 @@ func main() {
 
 		cmd := exec.Command(
 			"yt-dlp",
+
+			"-S", "vcodec:av01,acodec:opus",
 			"-f", "bestvideo[height<=480]+bestaudio/best[height<=480]",
+
 			"--merge-output-format", "mp4",
-			"-o", filepath.Join(downloadsFolderPath, playlist.Title, "%(playlist_index)s - %(title)s.%(ext)s"),
+			"-o", filepath.Join(downloadsFolderPath, playlist.Title, "%(playlist_index)03d - %(title)s.%(ext)s"),
+
 			"--download-archive", archiveFilePath,
 			"--concurrent-fragments", "4",
+
+			"--embed-thumbnail",
+			"--embed-metadata",
+			"--restrict-filenames",
+
 			"--cookies-from-browser", "firefox:/home/hamza/.zen/449e99hw.Default (beta)",
 			playlist.Link,
 		)
