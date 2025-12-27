@@ -49,7 +49,7 @@ func main() {
 
 		err := downloadPlaylist(playlist)
 		if err != nil {
-			log.Fatalln("error downloading playlist: ", err)
+			log.Println("error downloading playlist: ", err)
 		}
 	}
 
