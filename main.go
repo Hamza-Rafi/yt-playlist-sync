@@ -28,7 +28,7 @@ func main() {
 
 	var config Config
 	if err := yaml.Unmarshal(data, &config); err != nil {
-		log.Fatalln(err)
+		log.Fatalln("error unmarshalling config: ", err)
 	}
 
 	if err := godotenv.Load(); err != nil {
@@ -49,7 +49,7 @@ func main() {
 
 		err := downloadPlaylist(playlist)
 		if err != nil {
-			log.Fatalln(err)
+			log.Fatalln("error downloading playlist: ", err)
 		}
 	}
 
@@ -101,11 +101,12 @@ func downloadPlaylist(playlist Playlist) error {
 		"-o", filepath.Join(downloadsFolderPath, playlist.Title, "%(playlist_index)03d - %(title)s.%(ext)s"),
 
 		"--download-archive", archiveFilePath,
-		"--concurrent-fragments", "4",
+		"--concurrent-fragments", "2",
 
 		"--embed-thumbnail",
 		"--embed-metadata",
-		"--restrict-filenames",
+		"--embed-subs",
+		"--sub-langs", "en,ar",
 
 		"--cookies-from-browser", "firefox:/home/hamza/.zen/449e99hw.Default (beta)",
 		playlist.Link,
