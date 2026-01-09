@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/goccy/go-yaml"
 	"github.com/joho/godotenv"
 	"github.com/studio-b12/gowebdav"
 )
@@ -20,26 +19,14 @@ var (
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalln("loading .env file: %w", err)
+	}
+
 	// load config from config file
-	data, err := os.ReadFile(configFilePath)
+	config, err := LoadConfig(configFilePath)
 	if err != nil {
 		log.Fatalln(err)
-	}
-
-	var config Config
-	if err := yaml.Unmarshal(data, &config); err != nil {
-		log.Fatalln("error unmarshalling config: ", err)
-	}
-
-	if err := godotenv.Load(); err != nil {
-		log.Fatalln("Error loading .env file")
-	}
-
-	config.WebDAVUser = os.Getenv("WEBDAV_USER")
-	config.WebDAVPass = os.Getenv("WEBDAV_PASS")
-
-	if config.WebDAVUser == "" || config.WebDAVPass == "" {
-		log.Fatalln("Ensure WEBDAV_USER and WEBDAV_PASS env vars are set")
 	}
 
 	// download playlists
