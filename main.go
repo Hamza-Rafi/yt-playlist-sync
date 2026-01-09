@@ -1,13 +1,10 @@
 package main
 
 import (
-	"io/fs"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/joho/godotenv"
-	"github.com/studio-b12/gowebdav"
 )
 
 var (
@@ -28,6 +25,10 @@ func main() {
 	}
 
 	downloader := NewDownloader(downloadsFolderPath, archiveFilePath, config.BrowserString)
+	uploader, err := NewUploader(config.WebDAVURL, config.WebDAVUser, config.WebDAVPass, downloadsFolderPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
 
 	// download playlists
 	for i, playlist := range config.Playlists {
@@ -39,50 +40,12 @@ func main() {
 		}
 	}
 
-	webdavClient := gowebdav.NewClient(config.WebDAVURL, config.WebDAVUser, config.WebDAVPass)
-	if err := webdavClient.Connect(); err != nil {
-		log.Fatalln("error connecting to webdav server: ", err)
+	// upload everything to the webdav directory
+	if err := uploader.UploadAll(); err != nil {
+		log.Fatalln(err)
 	}
-
-	filepath.WalkDir(downloadsFolderPath, func(filePath string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		// get difference between filepath and ./downloads
-		remotePath, err := filepath.Rel(downloadsFolderPath, filePath)
-
-		if d.IsDir() {
-			err := webdavClient.MkdirAll(remotePath, 0o644)
-
-			log.Println("mkdir: ", remotePath)
-			if err != nil {
-				log.Fatalln("error creating: ", remotePath, err)
-			}
-		} else {
-			err := uploadFile(webdavClient, filePath, remotePath)
-			if err != nil {
-				log.Println("error writing: ", remotePath, err)
-			} else {
-				log.Println("uploaded: ", remotePath)
-			}
-		}
-
-		return nil
-	})
 
 	// delete local files
 	os.RemoveAll(downloadsFolderPath)
 	log.Println("removed local downloads")
-}
-
-func uploadFile(webdavClient *gowebdav.Client, filePath string, remotePath string) error {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return err
-	}
-
-	defer file.Close()
-
-	return webdavClient.WriteStream(remotePath, file, 0o644)
 }
