@@ -12,6 +12,8 @@ type Config struct {
 	WebDAVUser string
 	WebDAVPass string
 
+	BrowserString string `yaml:"browser_string"`
+
 	Playlists []Playlist
 }
 
