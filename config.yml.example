@@ -1,0 +1,8 @@
+webdav_url: https://<nextcloud_server_url>/remote.php/dav/files/<user>/<filepath>
+browser_string: ""
+playlists:
+  - "<link_to_playlist>"
+  - "<link_to_playlist>"
+  - "<link_to_playlist>"
+  - "<link_to_playlist>"
+  - "<link_to_playlist>"

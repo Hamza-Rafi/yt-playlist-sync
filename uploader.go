@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -8,6 +9,7 @@ import (
 	"github.com/studio-b12/gowebdav"
 )
 
+// uploads files to webdav directory
 type Uploader struct {
 	client    *gowebdav.Client
 	sourceDir string
@@ -45,6 +47,9 @@ func (u *Uploader) UploadAll() error {
 		if d.IsDir() {
 			return u.client.MkdirAll(remotePath, 0o644)
 		}
+
+		fmt.Println("uploading: ", path)
+
 		return u.uploadFile(path, remotePath)
 	})
 }

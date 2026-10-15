@@ -3,3 +3,6 @@ downloads/
 archive.txt
 .env
 yt-playlist-sync
+config.yml
+docker-compose.yml
+cookies.txt

@@ -12,14 +12,13 @@ type Config struct {
 	WebDAVUser string
 	WebDAVPass string
 
-	BrowserString string `yaml:"browser_string"`
+	// BrowserString string `yaml:"browser_string"`
 
-	Playlists []Playlist
-}
+	CookiesFilePath     string
+	ArchiveFilePath     string
+	DownloadsFolderPath string
 
-type Playlist struct {
-	Title string `yaml:"title"`
-	Link  string `yaml:"link"`
+	Playlists []string `yaml:"playlists"`
 }
 
 func LoadConfig(path string) (Config, error) {
